@@ -1,0 +1,132 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://scenes/levels/levelCont.gd" type="Script" id=1]
+[ext_resource path="res://scenes/levels/level1/level1.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/animalMesh/animalDropCont.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/spriteEffects/savedFx.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/levels/level1/net/catchingNet.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/spriteEffects/contactExplodeFx.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/spriteEffects/groundExplode.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/levels/level1/vehicleBasket.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/ui/ui.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/spriteEffects/cloudAnim.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/levels/closeWind.tscn" type="PackedScene" id=11]
+[ext_resource path="res://scenes/ui/fadeOut.tscn" type="PackedScene" id=12]
+[ext_resource path="res://scenes/spriteEffects/IceGroundExplode.tscn" type="PackedScene" id=13]
+[ext_resource path="res://scenes/spriteEffects/thunderStrike.tscn" type="PackedScene" id=14]
+[ext_resource path="res://scenes/animalMesh/iceDrop.tscn" type="PackedScene" id=15]
+[ext_resource path="res://scenes/levels/bgm.gd" type="Script" id=16]
+[ext_resource path="res://assets/soundMusic/music/1.wav" type="AudioStream" id=17]
+
+[sub_resource type="Animation" id=1]
+resource_name = "playBGM"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("AudioStreamPlayer:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AudioStreamPlayer:volume_db")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.2, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ -40.0, -10.0 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "stopBGM"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("AudioStreamPlayer:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AudioStreamPlayer:volume_db")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.2, 3.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ -10.0, -80.0 ]
+}
+
+[node name="levelCont" type="Spatial"]
+script = ExtResource( 1 )
+catchingNet = ExtResource( 5 )
+animalRain = ExtResource( 3 )
+dropContactFx = ExtResource( 6 )
+groundExplode = ExtResource( 7 )
+iceGroundExplode = ExtResource( 13 )
+savedStarsFx = ExtResource( 4 )
+closeWindow = ExtResource( 11 )
+iceDrop = ExtResource( 15 )
+thunderStrike = ExtResource( 14 )
+
+[node name="camLight" type="Spatial" parent="."]
+
+[node name="Camera" type="Camera" parent="camLight"]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 28.914, -52.993 )
+far = 250.0
+
+[node name="RayCast" type="RayCast" parent="camLight/Camera"]
+enabled = true
+collision_mask = 2
+
+[node name="DirectionalLight" type="DirectionalLight" parent="camLight"]
+transform = Transform( 0.855419, 0.452313, 0.252333, 0, -0.487189, 0.873296, 0.517937, -0.747034, -0.416751, 0, -14.4926, 0 )
+light_energy = 1.4
+shadow_enabled = true
+directional_shadow_max_distance = 90.0
+
+[node name="level1" parent="." instance=ExtResource( 2 )]
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Position3D" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16.126, 43.3295, 17.2 )
+
+[node name="vehicleBasket" parent="." instance=ExtResource( 8 )]
+
+[node name="cloudAnim" parent="." instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60.1181, -2.60195 )
+
+[node name="ui" parent="." instance=ExtResource( 9 )]
+
+[node name="fadeOut" parent="." instance=ExtResource( 12 )]
+
+[node name="bgm" type="Node" parent="."]
+script = ExtResource( 16 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="bgm"]
+stream = ExtResource( 17 )
+volume_db = -10.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="bgm"]
+anims/playBGM = SubResource( 1 )
+anims/stopBGM = SubResource( 3 )
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
